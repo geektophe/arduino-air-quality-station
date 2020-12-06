@@ -1,0 +1,11 @@
+Adafruit*
+DHT.*
+DSM501.*
+SPI.*
+LiquidCrystal_I2C.*
+build-nano-atmega328
+fontconvert/
+gfxfont.h
+glcdfont.c
+splash.h
+Fonts
