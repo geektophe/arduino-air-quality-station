@@ -1,7 +1,7 @@
 #ifndef _STATION_H
-#include "DSM501.h"
-#include "DHT.h"
-#include "LiquidCrystal_I2C.h"
+#include <DSM501.h>
+#include <DHT.h>
+#include <LiquidCrystal_I2C.h>
 
 
 #define TEMPERATURE_SAMPLE_TIME 5

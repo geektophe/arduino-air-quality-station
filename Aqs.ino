@@ -2,7 +2,7 @@
 #include "station.h"
 
 // DSM51 sensor
-#include "DSM501.h"
+#include <DSM501.h>
 #define DSM501_PM1_0    2
 #define DSM501_PM2_5    3
 #define SAMPLE_TIME     15 // seconds
@@ -10,15 +10,22 @@
 DSM501 dsm501;
 
 // DHT22 sensor
-#include "DHT.h"
+#include <DHT.h>
 #define DHTPIN 4
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
 
 DHT dht(DHTPIN, DHTTYPE); //déclaration du capteur
 
 // LCD screen
-#include "LiquidCrystal_I2C.h"
+#include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+/*
+// Sensors via I2C
+#include <sensors.h>
+uint8_t address = 0x13;
+sensors_t sensors(address);
+*/
 
 // Station
 station_t station;
@@ -62,14 +69,22 @@ void i2cscan(void) {
 }
 
 void setup() {
+    Serial.begin(9600);
+    delay(1000);
+    Serial.println("Initializing I2C");
+    Wire.begin();
+    Serial.println("Done initializing I2C");
+    i2cscan();
+
     // Initialize LCD screen
+    Serial.print("Initializing display");
     lcd.init();
     lcd.backlight();
+    Serial.print("Done initializing display");
 
     lcd.setCursor(0, 0);
     lcd.print("Initializing...");
 
-    Serial.begin(9600);
 
     // Initialize DSM501
     //           PM1.0 pin     PM2.5 pin     sampling duration in seconds
@@ -102,6 +117,25 @@ void loop() {
     if (station.readSensors()) {
         station.display();
     }
+    /*
+    char buf[5];
+    uint8_t n = Wire.requestFrom(0x13, 4);
+    Wire.readBytes(buf, 4);
+    buf[4] = '\0';
+    //uint32_t val = Wire.read();
+    Serial.print("From ATTiny85: ");
+    uint8_t bytes = sensors.fromI2C();
+    Serial.print("Received ");
+    Serial.print(bytes);
+    Serial.println("bytes.");
+    Serial.print("Temperature: ");
+    Serial.print(sensors.temperature);
+    Serial.println(" C");
+    Serial.print("Humidity: ");
+    Serial.print(sensors.humidity);
+    Serial.println(" pct");
+    delay(1000);
+    */
 }
 
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

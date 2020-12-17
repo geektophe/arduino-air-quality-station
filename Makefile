@@ -1,18 +1,28 @@
 # Arduino Make file. Refer to https://github.com/sudar/Arduino-Makefile
 
-CXXFLAGS      = -I. -I ../libraries
-LDFLAGS       = -Wl,-u,vfprintf -lprintf_flt
-BOARD_TAG     = nano
-BOARD_SUB     = atmega328
-ARDMK_DIR     = /usr/local/share/arduino-makefile
-ARDUINO_DIR   = /usr/local/share/arduino
-AVRDUDE_CONF  = /etc/avrdude.conf
-AVR_TOOLS_DIR = /usr/local
+## Pathes
+ARDUINO_SKETCHBOOK   = $(HOME)/git/arduino
+ARDMK_DIR            = /usr/local/share/arduino-makefile
+ARDUINO_DIR          = /usr/local/share/arduino
+AVRDUDE_CONF         = /etc/avrdude.conf
+AVR_TOOLS_DIR        = /usr/local
+## Compilation options
+LDFLAGS              = -Wl,-u,vfprintf -lprintf_flt
+ARDUINO_LIBS         = Wire SPI LiquidCrystal_I2C dsm501-interrupt DHT #station-sensors
+## Board info
+BOARD_TAG            = nano
+BOARD_SUB            = atmega328
+#BOARD_TAG            = uno
+## Uppload and console
+MONITOR_PORT         = /dev/cuaU0
+#ISP_PROG             = avrisp
+#ISP_PORT             = /dev/cuaU1
+#AVRDUDE_ARD_BAUDRATE = 19200
 
 include ${ARDMK_DIR}/Arduino.mk
 
 console:
-	cu -l /dev/cuaU0 -s 9600
+	cu -l $(MONITOR_PORT) -s 9600
 
 # --- leonardo (or pro micro w/leo bootloader)
 #BOARD_TAG    = leonardo

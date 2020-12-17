@@ -160,9 +160,11 @@ void Station::displayLCD_page1(void) {
     char buffer[17];
     lcd->setCursor(0, 0);
     snprintf(buffer, 17, "Temp%10.1f C", (double)temperature);
+    Serial.println(buffer);
     lcd->print(buffer);
     lcd->setCursor(0, 1);
     snprintf(buffer, 17, "Humidity%6.1f p", (double)humidity);
+    Serial.println(buffer);
     lcd->print(buffer);
 }
 
@@ -171,9 +173,11 @@ void Station::displayLCD_page2(void) {
     char buffer[17];
     lcd->setCursor(0, 0);
     snprintf(buffer, 17, "PM 1.0%10.0f", (double)pm10);
+    Serial.println(buffer);
     lcd->print(buffer);
     lcd->setCursor(0, 1);
     snprintf(buffer, 17, "PM 2.5%10.0f", (double)pm25);
+    Serial.println(buffer);
     lcd->print(buffer);
 }
 
@@ -182,6 +186,7 @@ void Station::displayLCD_page3(void) {
     char buffer[17];
     lcd->setCursor(0, 0);
     snprintf(buffer, 17, "C PM10~25%7.0f", (double)pm_concentration);
+    Serial.println(buffer);
     lcd->print(buffer);
     lcd->setCursor(0, 1);
     /*
