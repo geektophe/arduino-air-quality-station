@@ -20,12 +20,10 @@ DHT dht(DHTPIN, DHTTYPE); //déclaration du capteur
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-/*
 // Sensors via I2C
 #include <sensors.h>
 uint8_t address = 0x13;
 sensors_t sensors(address);
-*/
 
 // Station
 station_t station;
@@ -123,19 +121,31 @@ void loop() {
     Wire.readBytes(buf, 4);
     buf[4] = '\0';
     //uint32_t val = Wire.read();
+    */
     Serial.print("From ATTiny85: ");
     uint8_t bytes = sensors.fromI2C();
     Serial.print("Received ");
     Serial.print(bytes);
     Serial.println("bytes.");
-    Serial.print("Temperature: ");
+    Serial.print("ATTiy85 Temperature: ");
     Serial.print(sensors.temperature);
     Serial.println(" C");
-    Serial.print("Humidity: ");
+    Serial.print("ATTiy85 Humidity: ");
     Serial.print(sensors.humidity);
     Serial.println(" pct");
+    Serial.print("ATTiy85 HIC: ");
+    Serial.print(sensors.hic);
+    Serial.println(" C");
+    Serial.print("ATTiy85 PM10: ");
+    Serial.print(sensors.pm10);
+    Serial.println(" ppm");
+    Serial.print("ATTiy85 PM25: ");
+    Serial.print(sensors.pm25);
+    Serial.println(" ppm");
+    Serial.print("ATTiy85 PM concentration: ");
+    Serial.print(sensors.pm_concentration);
+    Serial.println(" ppm");
     delay(1000);
-    */
 }
 
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
