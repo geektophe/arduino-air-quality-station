@@ -20,11 +20,6 @@ DHT dht(DHTPIN, DHTTYPE); //déclaration du capteur
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// Sensors via I2C
-#include <sensors.h>
-uint8_t address = 0x13;
-sensors_t sensors(address);
-
 // Station
 station_t station;
 
@@ -83,7 +78,6 @@ void setup() {
     lcd.setCursor(0, 0);
     lcd.print("Initializing...");
 
-
     // Initialize DSM501
     //           PM1.0 pin     PM2.5 pin     sampling duration in seconds
     dsm501.begin(DSM501_PM1_0, DSM501_PM2_5, SAMPLE_TIME);
@@ -94,7 +88,7 @@ void setup() {
     // Wait 60s for sensors to warm up
     char buffer[3];
     Serial.println("Wait 60s for sensors to warm up");
-    for (int i = 1; i <= 60 && false; i++) {
+    for (int i = 1; i <= 60; i++) {
         delay(1000); // 1s
         snprintf(buffer, 3, "%02d", i);
         Serial.print(buffer);
@@ -107,44 +101,12 @@ void setup() {
     station.setLCD(&lcd);
 
     Serial.println("Sensors are ready!");
-    Serial.println();
-    Serial.println("Initializing display.");
 }
 
 void loop() {
     if (station.readSensors()) {
         station.display();
     }
-    /*
-    char buf[5];
-    uint8_t n = Wire.requestFrom(0x13, 4);
-    Wire.readBytes(buf, 4);
-    buf[4] = '\0';
-    //uint32_t val = Wire.read();
-    */
-    Serial.print("From ATTiny85: ");
-    uint8_t bytes = sensors.fromI2C();
-    Serial.print("Received ");
-    Serial.print(bytes);
-    Serial.println("bytes.");
-    Serial.print("ATTiy85 Temperature: ");
-    Serial.print(sensors.temperature);
-    Serial.println(" C");
-    Serial.print("ATTiy85 Humidity: ");
-    Serial.print(sensors.humidity);
-    Serial.println(" pct");
-    Serial.print("ATTiy85 HIC: ");
-    Serial.print(sensors.hic);
-    Serial.println(" C");
-    Serial.print("ATTiy85 PM10: ");
-    Serial.print(sensors.pm10);
-    Serial.println(" ppm");
-    Serial.print("ATTiy85 PM25: ");
-    Serial.print(sensors.pm25);
-    Serial.println(" ppm");
-    Serial.print("ATTiy85 PM concentration: ");
-    Serial.print(sensors.pm_concentration);
-    Serial.println(" ppm");
     delay(1000);
 }
 
