@@ -18,7 +18,7 @@ DSM501 dsm501;
 */
 
 // DHT22 sensor
-#include <DHT.h>
+#include <dhtnew.h>
 #define DHTPIN PB1
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
 

@@ -10,11 +10,11 @@
 DSM501 dsm501;
 
 // DHT22 sensor
-#include <DHT.h>
+#include <dhtnew.h>
 #define DHTPIN 4
 #define DHTTYPE DHT22 // DHT 22 (AM2302)
 
-DHT dht(DHTPIN, DHTTYPE); //déclaration du capteur
+DHTNEW dht(DHTPIN); //déclaration du capteur
 
 // LCD screen
 #include <LiquidCrystal_I2C.h>
@@ -24,6 +24,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #include <sensors.h>
 uint8_t address = 0x13;
 sensors_t sensors(address);
+unsigned long i2c_last = 0;
 
 // Station
 station_t station;
@@ -81,15 +82,16 @@ void setup() {
     Serial.print("Done initializing display");
 
     lcd.setCursor(0, 0);
-    lcd.print("Initializing...");
-
+    lcd.println("Initializing...");
 
     // Initialize DSM501
     //           PM1.0 pin     PM2.5 pin     sampling duration in seconds
     dsm501.begin(DSM501_PM1_0, DSM501_PM2_5, SAMPLE_TIME);
 
     // Initialize DHT22
-    dht.begin();
+    // dht.begin();
+    // dht.setHumOffset(10);
+    // dht.setTempOffset(-3.5);
 
     // Wait 60s for sensors to warm up
     char buffer[3];
@@ -114,31 +116,39 @@ void loop() {
     if (station.readSensors()) {
         station.display();
     }
-    /*
-    Serial.print("From ATTiny85: ");
-    uint8_t bytes = sensors.fromI2C();
-    Serial.print("Received ");
-    Serial.print(bytes);
-    Serial.println("bytes.");
-    Serial.print("ATTiy85 Temperature: ");
-    Serial.print(sensors.temperature);
-    Serial.println(" C");
-    Serial.print("ATTiy85 Humidity: ");
-    Serial.print(sensors.humidity);
-    Serial.println(" pct");
-    Serial.print("ATTiy85 HIC: ");
-    Serial.print(sensors.hic);
-    Serial.println(" C");
-    Serial.print("ATTiy85 PM10: ");
-    Serial.print(sensors.pm10);
-    Serial.println(" ppm");
-    Serial.print("ATTiy85 PM25: ");
-    Serial.print(sensors.pm25);
-    Serial.println(" ppm");
-    Serial.print("ATTiy85 PM concentration: ");
-    Serial.print(sensors.pm_concentration);
-    Serial.println(" ppm");
-    */
+    if (millis() - i2c_last >= 2000) {
+        unsigned long now = millis();
+        Serial.println();
+        Serial.print("From ATTiny85: ");
+        uint8_t bytes = sensors.fromI2C();
+        Serial.print("Received ");
+        Serial.print(bytes);
+        Serial.println("bytes.");
+        Serial.print("ATTiy85 Temperature: ");
+        Serial.print(sensors.temperature);
+        Serial.println(" C");
+        Serial.print("ATTiy85 Humidity: ");
+        Serial.print(sensors.humidity);
+        Serial.println(" pct");
+        Serial.print("ATTiy85 HIC: ");
+        Serial.print(sensors.hic);
+        Serial.println(" C");
+        Serial.print("ATTiy85 PM10: ");
+        Serial.print(sensors.pm10);
+        Serial.println(" ppm");
+        Serial.print("ATTiy85 PM25: ");
+        Serial.print(sensors.pm25);
+        Serial.println(" ppm");
+        Serial.print("ATTiy85 PM concentration: ");
+        Serial.print(sensors.pm_concentration);
+        Serial.println(" ppm");
+        i2c_last = now;
+        Serial.print("Got result in ");
+        Serial.print(millis() - now);
+        Serial.println(" ms");
+        Serial.println();
+
+    }
 }
 
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

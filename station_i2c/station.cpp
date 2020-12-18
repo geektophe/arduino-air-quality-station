@@ -16,7 +16,7 @@ void Station::setSensors(sensors_t *psensors) {
 }
 
 
-void Station::setDHT(DHT *pdht) {
+void Station::setDHT(DHTNEW *pdht) {
     dht = pdht;
 }
 
@@ -57,15 +57,18 @@ bool Station::readTemperature(void) {
         Serial.println("Reading Temperature");
         // La lecture du capteur prend 250ms
         // Les valeurs lues peuvet etre vieilles de jusqu'a 2 secondes (le capteur est lent)
-        double h = dht->readHumidity();
-        double t = dht->readTemperature();
+
+        int err = dht->read();
+        float h = dht->getHumidity();
+        float t = dht->getTemperature();
 
         //On verifie si la lecture a echoue, si oui on quitte la boucle pour recommencer.
-        if (isnan(h) || isnan(t)) {
-            Serial.println("Failed to read from DHT sensor!");
+        if (err != DHTLIB_OK) {
+            Serial.print("Failed to read from DHT sensor! [err=");
+            Serial.print(err);
+            Serial.println("]");
         } else {
             Serial.println("Successfully read temperature");
-            sensors->hic = dht->computeHeatIndex(t, h, false);
             sensors->temperature = t;
             sensors->humidity = h;
             update = true;

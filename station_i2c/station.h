@@ -1,7 +1,7 @@
 #ifndef _STATION_H
 #include <sensors.h>
 #include <DSM501.h>
-#include <DHT.h>
+#include <dhtnew.h>
 #include <LiquidCrystal_I2C.h>
 
 
@@ -13,7 +13,7 @@ class Station {
         sensors_t *sensors;
 
         // Temperature related variables
-        DHT *dht;
+        DHTNEW *dht;
         unsigned long dht_last_update;
         // Temperature related methods
         bool readTemperature(void);
@@ -38,7 +38,7 @@ class Station {
     public:
         Station();
         void setSensors(sensors_t*);
-        void setDHT(DHT*);
+        void setDHT(DHTNEW*);
         void setDSM501(DSM501*);
         void setLCD(LiquidCrystal_I2C*);
         bool readSensors(void);

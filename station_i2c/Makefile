@@ -8,7 +8,7 @@ AVRDUDE_CONF         = /etc/avrdude.conf
 AVR_TOOLS_DIR        = /usr/local
 ## Compilation options
 LDFLAGS              = -Wl,-u,vfprintf -lprintf_flt
-ARDUINO_LIBS         = Wire SPI LiquidCrystal_I2C dsm501-interrupt DHT station-sensors
+ARDUINO_LIBS         = Wire SPI LiquidCrystal_I2C dsm501-interrupt DHTNEW station-sensors
 ## Board info
 BOARD_TAG            = nano
 BOARD_SUB            = atmega328
